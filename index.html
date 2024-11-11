@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>MDFriday, Turn Markdown into Website in minutes.</title>
+
+    <link href="clean.css" rel="stylesheet" type="text/css">
+
+    <link href="fav.png" rel="shortcut icon" type="image/x-icon">
+    <link href="https://mdfriday.com/" rel="canonical">
+
+</head>
+<body>
+
+<div class="page-wrapper">
+    <nav id="nav" variant="null" scrolled="true" class="navbar">
+        <div class="navbar_container">
+            <div class="z-9999 flex-child-fixed" style="margin-top: -5px;">
+                <div class="navbar_logo-dark">
+                    <a href="https://mdfriday.com/" aria-current="page" class="logo-medium w-inline-block">
+                        <div class="logo-wrapper">
+                            <img width="Auto" alt="" src="mdfriday.svg" loading="eager" class="height-inherit">
+                        </div>
+                    </a></div>
+            </div>
+            <div class="navbar_content-wrapper">
+                <div class="navbar_menu-items-wrapper">
+                    <div data-hover="true" data-delay="0" class="navbar_dropdown-element-wrapper">
+                        <div class="navbar_dropdown-toggle w-dropdown-toggle" id="w-dropdown-toggle-0"
+                             aria-controls="w-dropdown-list-0" aria-haspopup="menu" aria-expanded="false" role="button"
+                             tabindex="0">
+                            <a onclick="showToast()" class="navbar_dropdown-toggle w-inline-block">
+                                <div class="paragraph-medium" title="Themes">Themes</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="navbar_dropdown-element-wrapper">
+                        <a onclick="showToast()" class="navbar_dropdown-toggle w-inline-block">
+                            <div class="paragraph-medium" title="Pricing">Pricing</div>
+                        </a>
+                    </div>
+                    <div class="navbar_bg-overlay"></div>
+                </div>
+                <div class="navbar_cta-container">
+
+                    <div class="navbar_hide-desktop-custom">
+                        <div class="height-1-25rem">
+                            <div color="" vertical="true" class="divider"></div>
+                        </div>
+                    </div>
+                    <div class="navbar_hide-desktop-custom">
+                        <div class="navbar_dropdown-element-wrapper">
+                            <a href="mailto:service@mdfriday.com" class="navbar_dropdown-toggle w-inline-block">
+                                <div class="paragraph-medium" title="About">Contact Us</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="buttonwrapper is-navbar">
+                        <a onclick="showToast()"
+                           class="button is-small is-stretched w-inline-block">
+                            <div>Get started</div>
+                            <div class="icon-12 w-embed">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 16 16"
+                                     fill="none" preserveAspectRatio="xMidYMid meet" aria-hidden="true" role="img">
+                                    <path d="M1 7.72705H15" stroke="currentColor" stroke-linecap="round"
+                                          stroke-linejoin="round"></path>
+                                    <path d="M9.27246 2L14.9997 7.72727L9.27246 13.4545" stroke="currentColor"
+                                          stroke-width="1.27273" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </div>
+                        </a><a button="" show-tablet="true" href="mailto:service@mdfriday.com"
+                               class="button-secondary is-small is-stretched w-inline-block">
+                        <div>Contact Us</div>
+                    </a></div>
+                </div>
+            </div>
+            <div class="show-tablet">
+                <div class="z-9999">
+                    <div class="flex flex-centre-align flex-gap-1-5rem">
+                        <div class="hide-mobile-landscape">
+                            <a onclick="showToast()"
+                               class="button is-small is-stretched w-inline-block">
+                                <div>Get started</div>
+                            </a></div>
+                        <div class="navbar_burger-icon-wrapper">
+                            <div class="navbar_burger-menu-stroke"></div>
+                            <div class="navbar_burger-menu-stroke"></div>
+                            <div class="navbar_burger-menu-stroke"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="navbar_script w-embed w-script">
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const NAVBAR_HIDE_SCROLL_DELTA = 40; // Scroll delta to hide navbar
+                    const NAVBAR_SHOW_SCROLL_DELTA = -20; // Scroll delta to show navbar
+                    const VARIANT_CHANGE_SCROLL_THRESHOLD = 80; // Scroll threshold for changing the navbar variant
+                    const RESPONSIVE_WIDTH_QUERY = '(max-width: 767px)'; // Media query for responsive behavior
+                    const THROTTLE_DELAY = 30; // Delay in ms for the throttle function
+
+                    const navbar = document.getElementById('nav'); // Select navbar
+                    const stickySections = document.querySelectorAll('[data-sticky-section]'); // Select sticky sections
+                    const originalVariant = navbar.getAttribute('variant'); // Store the original value
+                    let lastScrollPosition = 0; // Track of the last scroll position
+                    let cumulativeScrollDelta = 0; // Track cumulative scroll distance
+                    let isAnchorLink = window.location.hash; // Check if URL contains an anchor link
+                    let initialLoad = true; // Flag to track initial load
+
+                    // Function to check and update the navbar variant on load
+                    function checkAndUpdateNavbarVariantOnLoad() {
+                        let initialScrollPosition = window.scrollY || document.documentElement.scrollTop;
+                        if (initialScrollPosition > VARIANT_CHANGE_SCROLL_THRESHOLD) {
+                            navbar.setAttribute('variant', 'null');
+                            navbar.setAttribute('scrolled', 'true');  // Set 'scrolled' to true when navbar variant changes to null
+                        } else {
+                            navbar.setAttribute('variant', originalVariant);
+                            navbar.setAttribute('scrolled', 'false');  // Set 'scrolled' to false when variant is reset
+                        }
+                    }
+
+                    // Function to update sticky sections based on navbar visibility
+                    function updateStickySections(hidden) {
+                        stickySections.forEach(section => {
+                            if (hidden) {
+                                section.classList.add('navbar-hidden-sticky');
+                            } else {
+                                section.classList.remove('navbar-hidden-sticky');
+                            }
+                        });
+                    }
+
+                    // Function to handle scroll events
+                    function handleScroll() {
+                        let currentScrollPosition = window.scrollY || document.documentElement.scrollTop;
+                        let scrollDelta = currentScrollPosition - lastScrollPosition;
+
+                        if ((cumulativeScrollDelta > 0 && scrollDelta < 0) || (cumulativeScrollDelta < 0 && scrollDelta > 0)) {
+                            cumulativeScrollDelta = scrollDelta;
+                        } else {
+                            cumulativeScrollDelta += scrollDelta;
+                        }
+
+                        // Apply style changes only if screen width is below threshold
+                        if (window.matchMedia(RESPONSIVE_WIDTH_QUERY).matches) {
+                            if (!initialLoad || !isAnchorLink) {
+                                applyNavbarStyleChanges();
+                            }
+                        }
+
+                        // After first scroll, set initialLoad to false
+                        initialLoad = false;
+
+                        // Update the last scroll position
+                        lastScrollPosition = currentScrollPosition;
+
+                        // Check scroll position for variant attribute change
+                        if (currentScrollPosition > VARIANT_CHANGE_SCROLL_THRESHOLD) {
+                            navbar.setAttribute('variant', 'null');
+                            navbar.setAttribute('scrolled', 'true');  // Set 'scrolled' to true when navbar variant changes to null
+                        } else {
+                            navbar.setAttribute('variant', originalVariant);
+                            navbar.setAttribute('scrolled', 'false');  // Set 'scrolled' to false when variant is reset
+                        }
+                    }
+
+                    // Function to apply style changes to the navbar
+                    function applyNavbarStyleChanges() {
+                        if (cumulativeScrollDelta > NAVBAR_HIDE_SCROLL_DELTA && window.scrollY > 50) {
+                            navbar.classList.add('navbar-hidden'); // Update navbar position
+                            updateStickySections(true); // Update sticky position
+                            cumulativeScrollDelta = 0; // Reset cumulative scroll
+                        } else if (cumulativeScrollDelta < NAVBAR_SHOW_SCROLL_DELTA) {
+                            navbar.classList.remove('navbar-hidden'); // Update navbar position
+                            updateStickySections(false); // Update sticky position
+                            cumulativeScrollDelta = 0; // Reset cumulative scroll
+                        }
+                    }
+
+                    // Throttle function to limit the rate of function execution
+                    function throttle(func, limit) {
+                        let lastFunc;
+                        let lastRan;
+                        return function () {
+                            const context = this;
+                            const args = arguments;
+                            if (!lastRan) {
+                                func.apply(context, args);
+                                lastRan = Date.now();
+                            } else {
+                                clearTimeout(lastFunc);
+                                lastFunc = setTimeout(function () {
+                                    if ((Date.now() - lastRan) >= limit) {
+                                        func.apply(context, args);
+                                        lastRan = Date.now();
+                                    }
+                                }, limit - (Date.now() - lastRan));
+                            }
+                        };
+                    }
+
+                    // Call function to check and update navbar variant on initial load
+                    checkAndUpdateNavbarVariantOnLoad();
+
+                    // Add scroll event listener with throttled handler
+                    window.addEventListener('scroll', throttle(handleScroll, THROTTLE_DELAY));
+                });
+
+
+                /* START - NO SCROLL WHEN MOBILE MENU IS OPEN + COMBO CLASS FOR TRANSPARENT STYLING */
+                // Set overflow:hidden on body when clicking burger menu
+                document.querySelector('.navbar_burger-icon-wrapper').addEventListener('click', function () {
+                    var element = this;
+                    var clicks = element.getAttribute('data-clicks') === 'true'; // because data attributes return as string
+
+                    if (clicks) {
+                        document.body.style.overflow = 'auto';
+                        document.querySelector('#nav').classList.remove('is-open')
+                    } else {
+                        document.body.style.overflow = 'hidden';
+                        document.querySelector('#nav').classList.add('is-open')
+                    }
+
+                    element.setAttribute('data-clicks', !clicks);
+                });
+
+                // Enable scroll on anchor link click
+                navLinkItems = document.querySelectorAll('.navbar a');
+
+                for (let navLink of navLinkItems) {
+                    navLink.addEventListener('click', function () {
+                        document.querySelector('body').style.overflow = 'auto';
+                        document.querySelector('#nav').classList.remove('is-open');
+                    });
+                }
+                /* END - NO SCROLL WHEN MOBILE MENU IS OPEN + COMBO CLASS FOR TRANSPARENT STYLING */
+
+
+                /* START - NAVLINK BOLD ON HOVER */
+                // Automatically assign an attribute to each navbar link with same value as the link-text
+                let navTopLinks = document.querySelectorAll('.navbar_dropdown-toggle .paragraph-medium')
+                for (let topLink of navTopLinks) {
+                    topLink.setAttribute('title', `${topLink.innerText}`)
+                }
+                /* END - NAVLINK BOLD ON HOVER */
+
+                /*START - Play all features video when hovering card*/
+                document.addEventListener('DOMContentLoaded', () => {
+                    const videoContainer = document.querySelector('#nav-video');
+
+                    // Ensure the video container exists before adding event listeners
+                    if (videoContainer) {
+                        const navVideo = videoContainer.querySelector('video');
+
+                        // Ensure the video element exists within the container
+                        if (navVideo) {
+                            videoContainer.addEventListener('mouseenter', function () {
+                                navVideo.play();
+                            });
+
+                            videoContainer.addEventListener('mouseleave', function () {
+                                navVideo.pause();
+                                navVideo.currentTime = 0; // Rewind the video when not hovered
+                            });
+                        }
+                    }
+                });
+                /*END - Play all features video when hovering card*/
+
+                /*START - Show background when dropdown menu is open */
+                document.addEventListener('DOMContentLoaded', () => {
+                    // Select the navbar menu items wrapper
+                    const menuWrapper = document.querySelector('.navbar_menu-items-wrapper');
+
+                    // Select all dropdowns within the menu wrapper
+                    const dropdownWrappers = menuWrapper.querySelectorAll('.w-dropdown');
+                    const overlay = menuWrapper.querySelector('.navbar_bg-overlay');
+
+                    // Function to check if any dropdown is open by checking the child elements
+                    function checkDropdownState() {
+                        let anyOpen = false;
+                        dropdownWrappers.forEach(wrapper => {
+                            const dropdownChild = wrapper.querySelector('.w-dropdown-toggle'); // Assuming the child has this class
+                            if (dropdownChild && dropdownChild.classList.contains('w--open')) {
+                                anyOpen = true;
+                            }
+                        });
+
+                        // Toggle the .is-visible class on the overlay
+                        if (anyOpen) {
+                            overlay.classList.add('is-visible');
+                        } else {
+                            overlay.classList.remove('is-visible');
+                        }
+                    }
+
+                    // Set up MutationObserver configuration
+                    const observerConfig = {attributes: true, attributeFilter: ['class']};
+
+                    // Function to handle mutations
+                    const mutationCallback = (mutationsList) => {
+                        for (let mutation of mutationsList) {
+                            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                                checkDropdownState();
+                            }
+                        }
+                    };
+
+                    // Create a new MutationObserver instance
+                    const observer = new MutationObserver(mutationCallback);
+
+                    // Observe the child of each dropdown element for changes in its class within the menu wrapper
+                    dropdownWrappers.forEach(wrapper => {
+                        const dropdownChild = wrapper.querySelector('.w-dropdown-list'); // Assuming the child has this class
+                        if (dropdownChild) {
+                            observer.observe(dropdownChild, observerConfig);
+                        }
+                    });
+
+                    // Initial check for already open dropdowns on page load
+                    checkDropdownState();
+                });
+                /*END - Show background when dropdown menu is open */
+            </script>
+        </div>
+    </nav>
+
+    <main class="main-wrapper">
+        <header class="position-relative">
+            <div class="background-image-container">
+                <img src="banner-bg.svg" loading="eager" alt="" class="background-cover-image">
+            </div>
+            <div class="transparent-navbar_spacer"></div>
+            <div class="page-padding">
+                <div class="container-large z-1">
+                    <div id="w-node-c6b48c05-3349-7860-7f2d-74f76180164f-6180164b"
+                         class="padding-vertical padding-xlarge is-fixed is-bottom-2rem">
+                        <div id="w-node-c6b48c05-3349-7860-7f2d-74f761801650-6180164b" class="container-small">
+                            <div id="w-node-c6b48c05-3349-7860-7f2d-74f761801651-6180164b" class="text-align-center">
+                                <div class="spacer-xsmall"></div>
+                                <div class="margin-horizontal margin-small no-margin-tablet">
+                                    <div class="text-color-base-dark">
+                                        <h1 class="heading-huge">
+                                            <span>Turn MD docs to website, in</span>
+                                            <span class="text-highlight-gradient">&nbsp;minutes</span><span></span>
+                                        </h1>
+                                    </div>
+                                </div>
+                                <div class="spacer-xsmall"></div>
+                                <div class="margin-horizontal margin-huge no-margin-mobile-landscape">
+                                    <div class="rich-text-xlarge w-richtext">
+                                        <p>Transform your markdown documents into professional, multilingual websites.
+                                            With 500+ free themes and powerful shortcodes to enhance your pages,
+                                            it’s as easy as taking notes.</p>
+                                    </div>
+                                </div>
+                                <div class="spacer-large"></div>
+                                <div class="buttonwrapper center-button">
+                                    <a id="free-demo-btn"
+                                       freemium-text="Get started for FREE"
+                                       href="#how-to"
+                                       class="button is-large w-inline-block">
+                                        <div>Create free website</div>
+                                        <div class="icon-16 w-embed">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"
+                                                 viewBox="0 0 16 16" fill="none" preserveAspectRatio="xMidYMid meet"
+                                                 aria-hidden="true" role="img">
+                                                <path d="M1 7.72656H15" stroke="currentColor" stroke-linecap="round"
+                                                      stroke-linejoin="round"></path>
+                                                <path d="M9.27246 2L14.9997 7.72727L9.27246 13.4545"
+                                                      stroke="currentColor"
+                                                      stroke-width="1.27273" stroke-linecap="round"
+                                                      stroke-linejoin="round"></path>
+                                            </svg>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="text-color-grey-600">
+                                    <div class="spacer-xsmall"></div>
+                                    <div class="hero_disclaimer-container"><p
+                                            class="paragraph-small hide-mobile-landscape">No coding required, no
+                                        fuss</p>
+                                        <div hero-divider="" class="flex-child-stretch hide-mobile-landscape">
+                                            <div color="" vertical="true" class="divider"></div>
+                                        </div>
+                                        <div class="flex flex-gap-075rem">
+                                            <p class="paragraph-small">Just your perfect website</p></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </header>
+
+        <section>
+            <div class="padding-vertical padding-xxhuge">
+                <div class="z-3">
+                    <div class="page-padding">
+                        <div class="container-large">
+                            <div class="grid-12col-base is-align-bottom">
+                                <div id="w-node-_19ea42c6-8f34-1041-d1a8-ebfb2d3d272f-2d3d2728">
+                                    <div class="max-width-56rem">
+                                        <div is-round="false" color="light" class="caption">
+                                            <div class="caption-medium">Trusted by creators worldwide</div>
+                                        </div>
+                                        <div class="spacer-xxxsmall"></div>
+                                        <div class="text-color-base-dark">
+                                            <h1 class="heading-large">
+                                                <span>100+</span>
+                                            </h1>
+                                            <h2 class="heading-medium">
+                                                <span>websites created with MDFriday</span>
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <section id="how-to">
+            <div class="padding-vertical padding-large">
+                <div class="page-padding">
+                    <div class="container-large">
+                        <div class="position-relative">
+                            <div class="padding-top padding-xhuge">
+                                <div class="text-color-white">
+                                    <div class="text-align-center">
+                                        <div is-round="false" color="dark" class="caption">
+                                            <div class="caption-medium">FROM MD TO WEBSITE IN MINUTES</div>
+                                        </div>
+                                        <div class="spacer-xsmall"></div>
+                                        <h2 class="heading-large">How MDFriday works</h2></div>
+                                    <div class="spacer-xxxlarge"></div>
+                                    <div>
+                                        <div class="tab-container">
+                                            <div class="tab_component-wrapper">
+                                                <div class="grid-1col w-tabs">
+                                                    <div class="grid-4col is-gap-1rem is-2col-tablet w-tab-menu" role="tablist">
+                                                        <a class="product-tour-tab_link-wrap w-inline-block w-tab-link active w--current">
+                                                        <div class="text-color-white">
+                                                            <div class="z-1">
+                                                                <div class="text-color-white">
+                                                                    <div class="flex-horizontal gap-1rem">
+                                                                        <div class="marketing-icon is-small is-indigo is-indigo-600">
+                                                                            <div class="paragraph-large is-medium">1</div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <h3 class="paragraph-xlarge is-medium">Install Obsidian Plugin</h3>
+                                                                            <div class="spacer-tiny"></div>
+                                                                            <p class="label-regular">
+                                                                                Search for MDFriday in Obsidian’s plugin store, download, and enable it.
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                        <a class="product-tour-tab_link-wrap w-inline-block w-tab-link active w--current">
+                                                        <div class="z-1">
+                                                            <div class="text-color-white">
+                                                                <div class="flex-horizontal gap-1rem">
+                                                                    <div class="marketing-icon is-small is-indigo is-indigo-600">
+                                                                        <div class="paragraph-large is-medium">2</div>
+                                                                    </div>
+                                                                    <div><h3 class="paragraph-xlarge is-medium">
+                                                                        Create a Friday Note</h3>
+                                                                        <div class="spacer-tiny"></div>
+                                                                        <p target="item-description"
+                                                                           class="label-regular">
+                                                                            Open a new note with MDFriday enabled.</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                        <a class="product-tour-tab_link-wrap w-inline-block w-tab-link active w--current">
+
+                                                        <div class="z-1">
+                                                            <div class="text-color-white">
+                                                                <div class="flex-horizontal gap-1rem">
+                                                                    <div class="marketing-icon is-small is-indigo is-indigo-600">
+                                                                        <div class="paragraph-large is-medium">3</div>
+                                                                    </div>
+                                                                    <div><h3 class="paragraph-xlarge is-medium">
+                                                                        Preview</h3>
+                                                                        <div class="spacer-tiny"></div>
+                                                                        <p target="item-description"
+                                                                           class="label-regular">
+                                                                            Select a theme, configure properties, and click Preview.</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                        <a class="product-tour-tab_link-wrap w-inline-block w-tab-link active w--current">
+
+                                                        <div class="z-1">
+                                                            <div class="text-color-white">
+                                                                <div class="flex-horizontal gap-1rem">
+                                                                    <div class="marketing-icon is-small is-indigo is-indigo-600">
+                                                                        <div class="paragraph-large is-medium">4</div>
+                                                                    </div>
+                                                                    <div><h3 class="paragraph-xlarge is-medium">Deploy</h3>
+                                                                        <div class="spacer-tiny"></div>
+                                                                        <p target="item-description" class="label-regular">
+                                                                            Publish your site online at app.mdfriday.com.
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hide-mobile-landscape">
+                                <div class="spacer-xxxlarge"></div>
+                            </div>
+                        </div>
+                        <div class="container-xlarge-background border-radius-huge-corner border-radius-xlarge background-black">
+                            <img src="how-to-bg.webp" alt="" class="background-cover-image"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div color="" vertical="false" class="divider"></div>
+
+    </main>
+
+    <footer id="footer" class="footer-section">
+        <div class="page-padding">
+            <div class="container-large">
+                <div class="grid-12col-base row-gap-0rem is-align-top">
+                    <div id="w-node-_5834ca98-ddcd-32c3-f6d6-9632f459ad4e-d671f29a" class="show-tablet">
+                        <div class="padding-vertical padding-xxxlarge is-fixed">
+                            <div class="opacity-20">
+                                <div color="" vertical="false" class="divider"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="w-node-_5834ca98-ddcd-32c3-f6d6-9632f459ad51-d671f29a"
+                         class="flex-vertical-left flex-gap-1-5rem is-center-tablet"><a
+                            href="https://mdfriday.com/" aria-current="page" class="logo-medium w-inline-block">
+                        <div class="synthesia-logo-wrapper">
+                            <img style="width: 128px;" src="mdfriday.svg" alt="" class="height-inherit"></div>
+                    </a>
+
+                        <div class="max-width-37rem">
+                            <div class="text-align-left is-center-tablet">
+                                <p class="paragraph-small">
+                                    MDFriday allows everyone to build professional, secure,
+                                    multilingual sites—no need to worry about SSL certificates, servers, SEO, or
+                                    security.
+                                    Just a few clicks, and your website is ready.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex-child-stretch">
+                            <div class="opacity-20">
+                                <div color="" vertical="false" class="divider"></div>
+                            </div>
+                        </div>
+                        <p class="label-regular text-align-center-tablet">Wuhan, China</p>
+                    </div>
+
+                    <div id="w-node-_5834ca98-ddcd-32c3-f6d6-9632f459adc0-d671f29a"
+                         class="flex-vertical flex-gap-075rem">
+                        <div class="text-color-indigo-400">
+                            <div class="paragraph-medium is-medium">Resources</div>
+                        </div>
+                        <a onclick="showToast()" class="paragraph-small">Pricing</a>
+
+                    </div>
+
+                    <div id="w-node-_5834ca98-ddcd-32c3-f6d6-9632f459ade2-d671f29a"
+                         class="flex-vertical flex-gap-075rem">
+                        <div class="text-color-indigo-400">
+                            <div class="paragraph-medium is-medium">Social Media</div>
+                        </div>
+                        <a href="https://space.bilibili.com/491786455" target="_blank"
+                           class="paragraph-small">Bilibili</a>
+                    </div>
+                </div>
+                <div class="hide-tablet">
+                    <div class="padding-top padding-xxlarge">
+                        <div class="padding-bottom padding-small">
+                            <div class="opacity-20">
+                                <div color="" vertical="false" class="divider"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-space-between is-vertical-tablet flex-gap-1-5rem">
+                    <p class="label-regular">© 2024 MDFriday Limited. All rights reserved.</p>
+                    <div class="footerv2_social-wrapper"></div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</div>
+
+<!-- Toast 元素 -->
+<div id="toast" class="toast">Coming soon...</div>
+
+<script>
+    function showToast() {
+        const toast = document.getElementById("toast");
+        toast.classList.add("show");  // 显示 Toast
+
+        // 3秒后隐藏 Toast
+        setTimeout(function() {
+            toast.classList.remove("show");
+        }, 3000);
+    }
+</script>
+
+</body>
+</html>

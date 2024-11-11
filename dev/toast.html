@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us Toast</title>
+    <style>
+        /* Toast 样式 */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1;
+            left: 50%;
+            bottom: 30px;
+            font-size: 17px;
+            opacity: 0;
+            transition: opacity 0.5s, visibility 0s linear 0.5s;
+        }
+
+        /* 显示 Toast 时的样式 */
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+    </style>
+</head>
+<body>
+
+<a href="#" onclick="showToast()">Contact Us</a>
+
+<!-- Toast 元素 -->
+<div id="toast" class="toast">我们正在开发中，请稍后再试。</div>
+
+<script>
+    function showToast() {
+        var toast = document.getElementById("toast");
+        toast.classList.add("show");  // 显示 Toast
+
+        // 3秒后隐藏 Toast
+        setTimeout(function() {
+            toast.classList.remove("show");
+        }, 3000);
+    }
+</script>
+
+</body>
+</html>
